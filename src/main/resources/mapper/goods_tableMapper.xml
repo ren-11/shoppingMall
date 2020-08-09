@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzy.dao.goods_tableMapper" >
+  <resultMap id="BaseResultMap" type="com.xzy.model.GoodsTable" >
+    <id column="goods_id" property="goodsId" jdbcType="INTEGER" />
+    <result column="s_gID" property="sGid" jdbcType="INTEGER" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+    <result column="goods_price" property="goodsPrice" jdbcType="DOUBLE" />
+    <result column="goods_pic" property="goodsPic" jdbcType="VARCHAR" />
+    <result column="goods_des" property="goodsDes" jdbcType="VARCHAR" />
+    <result column="goods_com" property="goodsCom" jdbcType="INTEGER" />
+    <result column="first_id" property="firstId" jdbcType="INTEGER" />
+    <result column="second_id" property="secondId" jdbcType="INTEGER" />
+  </resultMap>
+
+  <select id="search1" parameterType="String" resultMap="BaseResultMap">
+    SELECT * from goods_table where
+    ((goods_name like concat('%',#{key},'%'))or
+     (goods_des like concat('%',#{key},'%') ))
+        order by goods_price desc;
+  </select>
+
+
+<!--//搜索模块-->
+    <resultMap id="BaseResultMapVO" type="com.xzy.vo.goods_tableVO" >
+        <id column="goods_id" property="goodsId" jdbcType="INTEGER" />
+        <result column="s_gID" property="sGid" jdbcType="INTEGER" />
+        <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+        <result column="goods_price" property="goodsPrice" jdbcType="DOUBLE" />
+        <result column="goods_pic" property="goodsPic" jdbcType="VARCHAR" />
+        <result column="goods_des" property="goodsDes" jdbcType="VARCHAR" />
+        <result column="goods_com" property="goodsCom" jdbcType="INTEGER" />
+        <result column="first_id" property="firstId" jdbcType="INTEGER" />
+        <result column="second_id" property="secondId" jdbcType="INTEGER" />
+        <result column="seller_name" property="seller_name" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--//模糊搜索条件-->
+    <sql id="mohu">
+        (goods_name like concat('%',#{key},'%')or goods_des like concat('%',#{key},'%'))
+    </sql>
+    <!--//多表联查-->
+    <sql id="liancha">
+         and g.s_gID=s.s_gID and s.seller_ID=se.seller_ID
+
+    </sql>
+
+<select id="search2" parameterType="String" resultMap="BaseResultMapVO">
+    select * from goods_table g,s_g s,seller se where
+    <include refid="mohu"/>
+     <include refid="liancha"/>
+    order by g.goods_price desc;
+</select>
+
+
+
+</mapper>

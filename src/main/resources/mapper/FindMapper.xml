@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzy.dao.FindMapper">
+    <resultMap id="GoodsMap" type="com.xzy.model.GoodsTable">
+        <id column="goods_id" jdbcType="INTEGER" property="goodsId" />
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+        <result column="goods_price" jdbcType="REAL" property="goodsPrice" />
+        <result column="goods_pic" jdbcType="VARCHAR" property="goodsPic" />
+        <result column="goods_des" jdbcType="VARCHAR" property="goodsDes" />
+        <result column="goods_com" jdbcType="INTEGER" property="goodsCom" />
+        <result column="first_id" jdbcType="INTEGER" property="firstId" />
+        <result column="second_id" jdbcType="INTEGER" property="secondId" />
+    </resultMap>
+
+    <resultMap id="USCollectMap" type="com.xzy.model.USCollect">
+        <id column="col_ID" jdbcType="INTEGER" property="colId" />
+        <result column="user_ID" jdbcType="INTEGER" property="userId" />
+        <result column="seller_ID" jdbcType="INTEGER" property="sellerId" />
+    </resultMap>
+
+    <resultMap id="SellerMap" type="com.xzy.model.Seller">
+        <id column="seller_ID" jdbcType="INTEGER" property="sellerId" />
+        <result column="seller_name" jdbcType="VARCHAR" property="sellerName" />
+        <result column="seller_pic" jdbcType="VARCHAR" property="sellerPic" />
+    </resultMap>
+
+    <resultMap id="SGMap" type="com.xzy.model.SG">
+        <id column="s_gID" jdbcType="INTEGER" property="sGid" />
+        <result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+        <result column="seller_ID" jdbcType="INTEGER" property="sellerId" />
+        <result column="stuck" jdbcType="INTEGER" property="stuck" />
+        <result column="success" jdbcType="INTEGER" property="success" />
+    </resultMap>
+
+    <resultMap id="CollectMap" type="com.xzy.model.Collect">
+        <id column="col_ID" jdbcType="INTEGER" property="colId" />
+        <result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+        <result column="col_num" jdbcType="INTEGER" property="colNum" />
+        <result column="user_ID" jdbcType="INTEGER" property="userId" />
+    </resultMap>
+
+    <!--查询用户收藏店铺-->
+    <select id="getuserCollect" parameterType="int" resultMap="USCollectMap">
+        select seller_ID from u_s_collect where user_ID=#{userId}
+    </select>
+    <!--查询店铺头像-->
+    <select id="getsellertPic" parameterType="int" resultMap="SellerMap">
+        select * from  seller where seller_ID=#{sellerId}
+    </select>
+
+    <!--查询用户收藏店铺头像和名字-->
+    <select id="getuserseller" parameterType="int" resultMap="SellerMap">
+        select * from  seller where seller_ID in(select seller_ID from u_s_collect where user_ID=#{userId})
+    </select>
+
+
+    <!--查询用户收藏店铺存在的商品-->
+    <select id="getsellerGoods" parameterType="int" resultMap="GoodsMap">
+        SELECT goods_id FROM  s_g WHERE seller_ID IN (SELECT seller_ID FROM u_s_collect WHERE user_ID=#{userId})
+    </select>
+    <!--查询用户收藏商品的收藏数-->
+    <select id="getcollectGoods" parameterType="com.xzy.model.GoodsTable" resultMap="GoodsMap">
+        SELECT goods_id FROM collect WHERE goods_id IN
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.goodsId,jdbcType=VARCHAR}
+        </foreach>
+        ORDER BY col_num DESC LIMIT 10
+    </select>
+    <!--查询商品图片-->
+    <select id="getGoodspic" parameterType="com.xzy.model.GoodsTable" resultMap="GoodsMap">
+        select goods_id,goods_pic,goods_des from goods_table where goods_id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.goodsId,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <!--查询商品所属商家-->
+    <select id="getseller" parameterType="int" resultMap="SellerMap">
+        select seller_ID from s_g where goods_id=#{goods_id}
+    </select>
+</mapper>

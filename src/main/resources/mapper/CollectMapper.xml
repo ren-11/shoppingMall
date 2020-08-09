@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xzy.dao.CollectMapper">
+    <insert id="add" parameterType="Collect">
+        insert into collect(col_num,col_ID,goods_id,user_id) values(#{col_num},#{col_ID},#{goods_id},#{user_id})
+    </insert>
+    <delete id="delete" parameterType="Collect">
+        delete from collect where col_ID=#{colId}
+    </delete>
+    <select id="list" resultType="CollectMap" parameterType="int">
+          select c.col_ID,c.col_num,g.goods_name,g.goods_pic,g.goods_des from collect c,goods_table g where g.goods_id=c.goods_id and c.user_id=#{userId}
+    </select>
+    <select id="pagelist" resultType="CollectMap" parameterType="int">
+        select c.col_ID,c.col_num,g.goods_name,g.goods_pic,g.goods_des from collect c,goods_table g where g.goods_id=c.goods_id limit #{start},#{pageSize}
+    </select>
+    <!-- 取得记录的总数 语法：select count(*) form 表名-->
+    <select id="getCount" resultType="int">
+        SELECT COUNT(*) FROM collect where user_id=1
+    </select>
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzy.dao.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.xzy.model.User">
+        <id column="user_ID" jdbcType="INTEGER" property="userId" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="user_pwd" jdbcType="VARCHAR" property="userPwd" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="DATE" jdbcType="DATE" property="date" />
+        <result column="user_pic" jdbcType="VARCHAR" property="userPic" />
+        <result column="user_real_name" jdbcType="VARCHAR" property="userRealName" />
+        <result column="user_birth" jdbcType="TIMESTAMP" property="userBirth" />
+        <result column="user_sex" jdbcType="CHAR" property="userSex" />
+    </resultMap>
+
+    <!--密码登录验证-->
+    <select id="loginCheck" resultMap="BaseResultMap" parameterType="com.xzy.model.User">
+        select * from uesr where user_name=#{userName} and  user_pwd=#{userPwd}
+    </select>
+
+    <!--验证码登录-->
+    <select id="codeloginCheck" resultMap="BaseResultMap" parameterType="com.xzy.model.User">
+        select * from uesr where phone=#{phone}
+    </select>
+
+    <!--注册-->
+    <insert id="register"  parameterType="com.xzy.model.User">
+        insert into uesr(user_name,user_pwd,phone,email,DATE,user_real_name,user_birth,user_sex)
+        values(#{userName},#{userPwd},#{phone},#{email},#{date},#{userRealName},#{userBirth},#{userSex})
+    </insert>
+
+    <!--修改密码-->
+    <update id="updatepwd" parameterType="com.xzy.model.User">
+        update uesr set user_pwd=#{userPwd} where phone=#{phone}
+    </update>
+
+</mapper>

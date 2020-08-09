@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzy.dao.CMapper">
+    <resultMap id="goodstable" type="com.xzy.model.GoodsTable">
+        <id column="goods_id" jdbcType="INTEGER" property="goodsId" />
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+        <result column="goods_price" jdbcType="REAL" property="goodsPrice" />
+        <result column="goods_pic" jdbcType="VARCHAR" property="goodsPic" />
+        <result column="goods_des" jdbcType="VARCHAR" property="goodsDes" />
+        <result column="goods_com" jdbcType="INTEGER" property="goodsCom" />
+        <result column="first_id" jdbcType="INTEGER" property="firstId" />
+        <result column="second_id" jdbcType="INTEGER" property="secondId" />
+    </resultMap>
+    <select id="classifyleft" parameterType="long" resultMap="goodstable">
+        select goods_name,goods_pic from goods_table where first_id = #{fid};
+    </select>
+    <select id="hotclassify"  resultMap="goodstable">
+        SELECT goods_name,goods_pic FROM goods_table WHERE goods_id in (
+            select goods_table.first_id
+            FROM (SELECT goods_table.first_id FROM
+                                                  goods_table,recommend
+                  WHERE goods_table.goods_id = recommend.goods_id ORDER BY click desc LIMIT 4) AS goods_table);
+    </select>
+    <select id="recommendclassify" resultMap="goodstable">
+        SELECT goods_name,goods_pic FROM goods_table WHERE goods_id in
+                                                 (SELECT first_id FROM (SELECT first_id FROM goods_table ORDER BY goods_com DESC LIMIT 4) AS goods_table)
+    </select>
+</mapper>

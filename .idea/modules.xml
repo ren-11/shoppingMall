@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../JAVA EE/Shopping_Mall/Shopping_Mall.iml" filepath="$PROJECT_DIR$/../JAVA EE/Shopping_Mall/Shopping_Mall.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shoppingMall.iml" filepath="$PROJECT_DIR$/shoppingMall.iml" />
+    </modules>
+  </component>
+</project>
